@@ -1,0 +1,37 @@
+# =============================================================================
+# AutoGrader - Python dependencies            (install: pip install -r requirements.txt)
+# Tested target: Ubuntu 22.04 / 24.04, Python 3.10+
+# =============================================================================
+
+# --- Web frontend -------------------------------------------------------------
+# gradio : builds the browser UI in app.py (file upload, rule editor, result tables, downloads).
+#          Only needed for `python app.py` / `python main.py --ui`; the CLI works without it.
+gradio>=4.44
+
+# --- Talking to the local LLM ---------------------------------------------------
+# requests : plain HTTP client used by agent/llm_client.py to call the Ollama server
+#            (http://localhost:11434/api/chat). We deliberately do NOT use LangChain,
+#            ChromaDB or the `ollama` pip package: the rules live in a JSON file, so
+#            no RAG / vector store is needed and the dependency list stays tiny.
+requests>=2.31
+
+# --- Static analysis (optional but recommended) ----------------------------------
+# lizard : cyclomatic complexity + function length for C (the "structure" and
+#          "modularity" metrics). If it is not installed, agent/c_tools.py falls back to
+#          its own built-in brace-matching parser, so grading still works.
+lizard>=1.17
+
+# =============================================================================
+# SYSTEM packages (not installable with pip) - install with apt:
+#
+#   sudo apt update
+#   sudo apt install -y build-essential   # gcc: compile check, warnings, -fsanitize (ASan/UBSan/LSan)
+#   sudo apt install -y util-linux        # `prlimit`: CPU/memory/output limits for the sandbox (preinstalled)
+#   sudo apt install -y cppcheck          # optional: extra static-analysis findings in "structure"
+#   sudo apt install -y valgrind          # optional: second leak check (set "valgrind": true in rules)
+#
+#   Ollama (local LLM runner, the main "evaluator" backend):
+#   curl -fsSL https://ollama.com/install.sh | sh
+#   ollama pull llama3.1:8b               # or qwen2.5-coder:7b, llama3.2:3b for small machines
+#   ollama serve                          # usually already running as a service
+# =============================================================================

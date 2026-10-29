@@ -1,0 +1,85 @@
+===== Grading report for add_broken.c =====
+Overall grade: 28.0 / 100   (PARTIAL REPORT)
+Problem: add_two_integers   Rules: rules_add.json   Rules hash: sha256:d6269ba2417e1abc4...
+First pass: compiled=False  smoke_ok=False  suspected_infinite_loop=False
+  ! Compilation failed: add_broken.c:4:5: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘scanf’
+
+Metric          Weight     Points  Comment
+------------------------------------------------------------------------------
+correctness        20%     0.0/20  (skipped) Skipped: program does not compile.
+syntax             10%     0.0/10  Does not compile: add_broken.c:4:5: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__
+structure          10%    10.0/10  Complexity and function length are within limits.
+modularity         10%     3.0/10  Only main() is defined. Extract the core logic into a helper (e.g. int add(int, int)).
+logical            10%     0.0/10  (skipped) Skipped: program does not compile.
+complexity         10%     0.0/10  (skipped) Skipped: program does not compile.
+memory_safety      10%     0.0/10  (skipped) Skipped: program does not compile.
+readability        10%     5.0/10  LLM unavailable - heuristic readability only (comments 0%, avg name length 2.5).
+originality        10%    10.0/10  max similarity 0.64 (safe).
+--- Suggestions to raise the grade ---
+- [syntax] Does not compile: add_broken.c:4:5: error: expected ‘=’, ‘,’, ‘;’,
+  ‘asm’ or ‘__attribute__’ before ‘scanf’
+- [modularity] Only main() is defined. Extract the core logic into a helper
+  (e.g. int add(int, int)).
+
+--- Usefulness & limitations of this evaluation ---
+Useful for:
+1. Course-scale autograding of lab submissions
+    Example: A 300-student C programming lab collects add.c files. The agent
+    compiles, sandboxes and scores each file under the same rules in a few
+    seconds per submission, and writes one JSON + text report per student.
+    Benefit: Every student is graded by identical, reproducible rules, and TAs
+    spend their time on borderline cases instead of running 300 programs by
+    hand.
+2. Instant self-check feedback before the deadline
+    Example: A student submits int a,b; printf("%d", a+b) and immediately sees
+    the failing input 2147483647 1 with the expected output 2147483648 and an
+    explanation of signed overflow.
+    Benefit: Students learn from a concrete counter-example while they can
+    still fix the program, not weeks later from a mark.
+3. Plagiarism triage for instructors
+    Example: Two submissions that differ only in variable names and comments
+    reach a token-similarity of 1.00 against the 0.85 threshold and are
+    flagged. The instructor reviews that pair instead of reading all 300
+    files.
+    Benefit: Narrows manual integrity checking to the few suspicious pairs.
+4. Coding-interview and hiring screens
+    Example: A company runs 500 candidate submissions for an 'add two integers
+    safely' task. The agent ranks them by correctness, edge-case handling and
+    memory safety and gives a per-metric explanation.
+    Benefit: Fast first-round filtering where every rejection can be justified
+    metric by metric.
+
+Limits of this report:
+1. Tests cannot prove correctness
+    Example: A program that hard-codes the answers for the 10 visible inputs
+    (if (a==7 && b==5) puts("12");) or only handles the whitespace layouts
+    used in the tests still scores 10/10 on correctness, and also passes the
+    built-in edge cases it happens to special-case.
+    Mitigation: Differential testing against the reference solution on extra
+    edge cases and LLM-proposed counter-tests; keep a hidden test set larger
+    than the published one.
+2. Empirical complexity estimation is noisy and size-limited
+    Example: With sizes [1, 10, 100] an O(n^2) solution runs in under 1 ms, so
+    every run is below the timing noise floor and the agent reports
+    'consistent with the required bound' instead of detecting the quadratic
+    growth. Likewise an O(n) program with a huge constant can be mislabelled
+    O(1).
+    Mitigation: Use large sizes and an input generator in the rules (e.g. n up
+    to 10^5); treat 'inconclusive' verdicts as 'needs human review'.
+3. Similarity and AI-copy detection give false positives and false negatives
+    Example: For a trivial task two honest students both write the same 8-line
+    program and have similarity 1.00 (the min_tokens guard silences very short
+    files, which then become uncheckable). Conversely, code copied from the
+    web is only caught if that solution is already in the corpus folders, and
+    a restructured ChatGPT answer produces low similarity and escapes.
+    Mitigation: Flags are triage only: a human must review them; keep adding
+    known online/LLM solutions to reference_corpus/.
+4. LLM readability scores are subjective and model-dependent
+    Example: A small 8B local model rates a file full of useless comments such
+    as '// add a and b' higher than clean, idiomatic C with no comments.
+    Switching the model in the rules (llama3.1 to qwen2.5-coder) can move the
+    readability score by 2-3 points. Identical results rely on the on-disk
+    response cache.
+    Mitigation: Fixed rubric prompt, temperature 0, seed 42, response cache,
+    and a 30% heuristic blend; re-grade with the same model and cache for
+    official marks.

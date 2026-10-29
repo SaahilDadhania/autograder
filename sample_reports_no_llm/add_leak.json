@@ -1,0 +1,308 @@
+{
+  "submission": "add_leak.c",
+  "problem": "add_two_integers",
+  "rules_file": "rules_add.json",
+  "rules_hash": "sha256:d6269ba2417e1abc4b41437a41b33f9cc57202a1067a60f7eb946e1657c3aa18",
+  "grade": 94.94,
+  "partial": false,
+  "first_pass": {
+    "compiled": true,
+    "compile_warnings": 0,
+    "smoke_ok": true,
+    "suspected_infinite_loop": false,
+    "static_sanity": {
+      "has_main": true,
+      "reads_input": true,
+      "writes_output": true,
+      "main_returns": true
+    },
+    "notes": [],
+    "smoke_status": "OK"
+  },
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "score": 1.0,
+      "weight": 0.2,
+      "contribution": 20.0,
+      "skipped": false,
+      "evidence": {
+        "tests_passed": 10,
+        "tests_total": 10,
+        "failing": [],
+        "profile": {
+          "max_cpu_ms": 1.57,
+          "peak_rss_mb": 32.32
+        }
+      },
+      "feedback": "10/10 tests pass."
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "warnings": 0,
+        "messages": [],
+        "flags": [
+          "-Wall",
+          "-Wextra",
+          "-std=c11"
+        ],
+        "would_fail_with_Werror": false
+      },
+      "feedback": "No warnings."
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "functions": [
+          {
+            "name": "add_on_heap",
+            "cyclomatic": 2,
+            "nloc": 6
+          },
+          {
+            "name": "main",
+            "cyclomatic": 2,
+            "nloc": 6
+          }
+        ],
+        "limits": {
+          "max_cyclomatic": 8,
+          "max_function_length": 40
+        },
+        "cppcheck": "cppcheck not installed (skipped)",
+        "cppcheck_findings": []
+      },
+      "feedback": "Complexity and function length are within limits."
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "functions_defined": 2,
+        "helpers_used": [
+          "add_on_heap"
+        ],
+        "expected_min": 2
+      },
+      "feedback": "Good: 1 helper function(s) used (add_on_heap)."
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "cases_run": 13,
+        "cases_passed": 13,
+        "unknown_case_names": [],
+        "failing": [],
+        "llm_counter_tests": {
+          "proposed_valid": 0,
+          "failing": []
+        }
+      },
+      "feedback": "13/13 edge cases handled."
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "required": "O(1)",
+        "observed": "O(1)",
+        "slope": 0.018,
+        "inconclusive": true,
+        "generator": "constant",
+        "curve_ms": [
+          {
+            "n": 1,
+            "median_cpu_ms": 2.009
+          },
+          {
+            "n": 10,
+            "median_cpu_ms": 2.176
+          },
+          {
+            "n": 100,
+            "median_cpu_ms": 2.179
+          }
+        ]
+      },
+      "feedback": "Consistent with O(1): all runs finished below the 30 ms timing noise floor (max 2.2 ms), so growth could not be measured - use larger sizes for a firm verdict."
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "score": 0.66,
+      "weight": 0.1,
+      "contribution": 6.6,
+      "skipped": false,
+      "evidence": {
+        "inputs_checked": 23,
+        "issues": [
+          "LSan: memory leak (malloc without free)"
+        ],
+        "leaksanitizer_unavailable": false,
+        "valgrind": null
+      },
+      "feedback": "1 issue(s): LSan: memory leak (malloc without free)"
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "score": 0.8344,
+      "weight": 0.1,
+      "contribution": 8.34,
+      "skipped": false,
+      "evidence": {
+        "llm_used": false,
+        "reason": "LLM disabled in rules (llm.enabled = false)",
+        "heuristic": {
+          "comment_ratio": 0.13,
+          "avg_variable_name_length": 4.0,
+          "long_lines": 0,
+          "indented_ratio": 0.53
+        }
+      },
+      "feedback": "LLM unavailable - heuristic readability only (comments 13%, avg name length 4.0)."
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "skipped": false,
+      "evidence": {
+        "max_similarity": 0.51,
+        "closest": "add_copy.c",
+        "threshold": 0.85,
+        "tokens": 91,
+        "inconclusive_short": false,
+        "top_matches": [
+          {
+            "file": "add_copy.c",
+            "similarity": 0.51,
+            "corpus": "corpus_dir"
+          },
+          {
+            "file": "add_clean.c",
+            "similarity": 0.51,
+            "corpus": "corpus_dir"
+          },
+          {
+            "file": "add_wrong.c",
+            "similarity": 0.396,
+            "corpus": "corpus_dir"
+          }
+        ],
+        "ai_style_signals": [],
+        "llm_opinion": null
+      },
+      "feedback": "max similarity 0.51 (safe)."
+    }
+  ],
+  "flags": [],
+  "failures": [
+    {
+      "test": "test:01",
+      "input": "7 5\n",
+      "expected": "no sanitizer diagnostics",
+      "got": "",
+      "status": "SANITIZER",
+      "note": "LSan: memory leak (malloc without free)",
+      "stderr": "=================================================================\n==2663==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 8 byte(s) in 1 object(s) allocated from:\n    #0 0x7f782d4fd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 0x557bf8f742e7 in add_on_he",
+      "source": "sanitizer",
+      "metric": "memory_safety",
+      "why": "See the sanitizer / compiler message above."
+    }
+  ],
+  "suggestions": [
+    "[memory_safety] 1 issue(s): LSan: memory leak (malloc without free)"
+  ],
+  "summary": "",
+  "llm": {
+    "enabled": false,
+    "available": false,
+    "model": "llama3.1:8b",
+    "temperature": 0,
+    "seed": 42
+  },
+  "rule_warnings": [],
+  "usefulness_limitations": {
+    "usefulness": [
+      {
+        "use_case": "Course-scale autograding of lab submissions",
+        "example": "A 300-student C programming lab collects add.c files. The agent compiles, sandboxes and scores each file under the same rules in a few seconds per submission, and writes one JSON + text report per student.",
+        "benefit": "Every student is graded by identical, reproducible rules, and TAs spend their time on borderline cases instead of running 300 programs by hand."
+      },
+      {
+        "use_case": "Instant self-check feedback before the deadline",
+        "example": "A student submits int a,b; printf(\"%d\", a+b) and immediately sees the failing input 2147483647 1 with the expected output 2147483648 and an explanation of signed overflow.",
+        "benefit": "Students learn from a concrete counter-example while they can still fix the program, not weeks later from a mark."
+      },
+      {
+        "use_case": "Plagiarism triage for instructors",
+        "example": "Two submissions that differ only in variable names and comments reach a token-similarity of 1.00 against the 0.85 threshold and are flagged. The instructor reviews that pair instead of reading all 300 files.",
+        "benefit": "Narrows manual integrity checking to the few suspicious pairs."
+      },
+      {
+        "use_case": "Coding-interview and hiring screens",
+        "example": "A company runs 500 candidate submissions for an 'add two integers safely' task. The agent ranks them by correctness, edge-case handling and memory safety and gives a per-metric explanation.",
+        "benefit": "Fast first-round filtering where every rejection can be justified metric by metric."
+      }
+    ],
+    "limitations": [
+      {
+        "limitation": "Tests cannot prove correctness",
+        "example": "A program that hard-codes the answers for the 10 visible inputs (if (a==7 && b==5) puts(\"12\");) or only handles the whitespace layouts used in the tests still scores 10/10 on correctness, and also passes the built-in edge cases it happens to special-case.",
+        "mitigation": "Differential testing against the reference solution on extra edge cases and LLM-proposed counter-tests; keep a hidden test set larger than the published one."
+      },
+      {
+        "limitation": "Empirical complexity estimation is noisy and size-limited",
+        "example": "With sizes [1, 10, 100] an O(n^2) solution runs in under 1 ms, so every run is below the timing noise floor and the agent reports 'consistent with the required bound' instead of detecting the quadratic growth. Likewise an O(n) program with a huge constant can be mislabelled O(1).",
+        "mitigation": "Use large sizes and an input generator in the rules (e.g. n up to 10^5); treat 'inconclusive' verdicts as 'needs human review'."
+      },
+      {
+        "limitation": "Similarity and AI-copy detection give false positives and false negatives",
+        "example": "For a trivial task two honest students both write the same 8-line program and have similarity 1.00 (the min_tokens guard silences very short files, which then become uncheckable). Conversely, code copied from the web is only caught if that solution is already in the corpus folders, and a restructured ChatGPT answer produces low similarity and escapes.",
+        "mitigation": "Flags are triage only: a human must review them; keep adding known online/LLM solutions to reference_corpus/."
+      },
+      {
+        "limitation": "LLM readability scores are subjective and model-dependent",
+        "example": "A small 8B local model rates a file full of useless comments such as '// add a and b' higher than clean, idiomatic C with no comments. Switching the model in the rules (llama3.1 to qwen2.5-coder) can move the readability score by 2-3 points. Identical results rely on the on-disk response cache.",
+        "mitigation": "Fixed rubric prompt, temperature 0, seed 42, response cache, and a 30% heuristic blend; re-grade with the same model and cache for official marks."
+      }
+    ]
+  },
+  "tool_versions": {
+    "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cppcheck": "not installed",
+    "valgrind": "not installed",
+    "lizard": "not installed (built-in parser used)",
+    "python": "3.12.3",
+    "ollama": "not running",
+    "ollama_model": "llama3.1:8b"
+  }
+}

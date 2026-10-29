@@ -1,0 +1,46 @@
+{
+  "usefulness": [
+    {
+      "use_case": "Course-scale autograding of lab submissions",
+      "example": "A 300-student C programming lab collects add.c files. The agent compiles, sandboxes and scores each file under the same rules in a few seconds per submission, and writes one JSON + text report per student.",
+      "benefit": "Every student is graded by identical, reproducible rules, and TAs spend their time on borderline cases instead of running 300 programs by hand."
+    },
+    {
+      "use_case": "Instant self-check feedback before the deadline",
+      "example": "A student submits int a,b; printf(\"%d\", a+b) and immediately sees the failing input 2147483647 1 with the expected output 2147483648 and an explanation of signed overflow.",
+      "benefit": "Students learn from a concrete counter-example while they can still fix the program, not weeks later from a mark."
+    },
+    {
+      "use_case": "Plagiarism triage for instructors",
+      "example": "Two submissions that differ only in variable names and comments reach a token-similarity of 1.00 against the 0.85 threshold and are flagged. The instructor reviews that pair instead of reading all 300 files.",
+      "benefit": "Narrows manual integrity checking to the few suspicious pairs."
+    },
+    {
+      "use_case": "Coding-interview and hiring screens",
+      "example": "A company runs 500 candidate submissions for an 'add two integers safely' task. The agent ranks them by correctness, edge-case handling and memory safety and gives a per-metric explanation.",
+      "benefit": "Fast first-round filtering where every rejection can be justified metric by metric."
+    }
+  ],
+  "limitations": [
+    {
+      "limitation": "Tests cannot prove correctness",
+      "example": "A program that hard-codes the answers for the 10 visible inputs (if (a==7 && b==5) puts(\"12\");) or only handles the whitespace layouts used in the tests still scores 10/10 on correctness, and also passes the built-in edge cases it happens to special-case.",
+      "mitigation": "Differential testing against the reference solution on extra edge cases and LLM-proposed counter-tests; keep a hidden test set larger than the published one."
+    },
+    {
+      "limitation": "Empirical complexity estimation is noisy and size-limited",
+      "example": "With sizes [1, 10, 100] an O(n^2) solution runs in under 1 ms, so every run is below the timing noise floor and the agent reports 'consistent with the required bound' instead of detecting the quadratic growth. Likewise an O(n) program with a huge constant can be mislabelled O(1).",
+      "mitigation": "Use large sizes and an input generator in the rules (e.g. n up to 10^5); treat 'inconclusive' verdicts as 'needs human review'."
+    },
+    {
+      "limitation": "Similarity and AI-copy detection give false positives and false negatives",
+      "example": "For a trivial task two honest students both write the same 8-line program and have similarity 1.00 (the min_tokens guard silences very short files, which then become uncheckable). Conversely, code copied from the web is only caught if that solution is already in the corpus folders, and a restructured ChatGPT answer produces low similarity and escapes.",
+      "mitigation": "Flags are triage only: a human must review them; keep adding known online/LLM solutions to reference_corpus/."
+    },
+    {
+      "limitation": "LLM readability scores are subjective and model-dependent",
+      "example": "A small 8B local model rates a file full of useless comments such as '// add a and b' higher than clean, idiomatic C with no comments. Switching the model in the rules (llama3.1 to qwen2.5-coder) can move the readability score by 2-3 points. Identical results rely on the on-disk response cache.",
+      "mitigation": "Fixed rubric prompt, temperature 0, seed 42, response cache, and a 30% heuristic blend; re-grade with the same model and cache for official marks."
+    }
+  ]
+}

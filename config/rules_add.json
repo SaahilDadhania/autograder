@@ -1,0 +1,50 @@
+{
+  "problem": "add_two_integers",
+  "problem_statement": "Read two integers on a single line separated by whitespace and print their sum followed by a newline. Inputs may be any signed 32-bit integers; the sum must be mathematically correct (it can exceed the 32-bit range).",
+  "time_limit_s": 1,
+  "memory_limit_mb": 64,
+  "reference_solution": "reference/add_ref.c",
+  "usefulness_file": "config/usefulness_limitations.json",
+
+  "llm": {
+    "enabled": true,
+    "host": "http://localhost:11434",
+    "model": "llama3.1:8b",
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 4096,
+    "max_explanations": 3,
+    "write_summary": true
+  },
+
+  "metrics": [
+    { "name": "correctness", "analyzer": "io_tests", "weight": 0.20,
+      "params": { "testset_dir": "tests/add/", "compare": "lines" } },
+
+    { "name": "syntax", "analyzer": "compiler_warnings", "weight": 0.10,
+      "params": { "flags": "-Wall -Wextra -Werror -std=c11" } },
+
+    { "name": "structure", "analyzer": "static_analysis", "weight": 0.10,
+      "params": { "max_cyclomatic": 8, "max_function_length": 40 } },
+
+    { "name": "modularity", "analyzer": "function_split", "weight": 0.10,
+      "params": { "expect_helpers": true, "min_functions": 2 } },
+
+    { "name": "logical", "analyzer": "edge_case_runner", "weight": 0.10,
+      "params": { "cases": ["negatives", "zero", "int_overflow", "whitespace"],
+                  "llm_cases": 3, "llm_cases_affect_grade": false } },
+
+    { "name": "complexity", "analyzer": "complexity_estimator", "weight": 0.10,
+      "params": { "required": "O(1)", "sizes": [1, 10, 100], "generator": "constant" } },
+
+    { "name": "memory_safety", "analyzer": "sanitizer_run", "weight": 0.10,
+      "params": { "flags": "-fsanitize=address,undefined", "valgrind": false } },
+
+    { "name": "readability", "analyzer": "llm_review", "weight": 0.10,
+      "params": { "temperature": 0, "seed": 42, "heuristic_blend": 0.3 } },
+
+    { "name": "originality", "analyzer": "similarity_flag", "weight": 0.10,
+      "params": { "corpus_dir": "submissions/", "reference_corpus_dir": "reference_corpus/",
+                  "flag_threshold": 0.85, "min_tokens": 30, "ask_llm": false } }
+  ]
+}
