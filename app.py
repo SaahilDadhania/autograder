@@ -19,7 +19,7 @@ CONFIG_DIR = PROJECT_ROOT / "config"
 # Backend functions (no gradio here)
 
 def list_rule_files() -> list:
-    """Names of all rule sets available in config/ (files called rules_*.json)."""
+    
     return sorted(p.name for p in CONFIG_DIR.glob("rules_*.json"))
 
 
@@ -72,11 +72,11 @@ def run_grading(source_file, rules_text: str, model: str, use_llm: bool):
     return headline, rows, render_text(report), report, [str(jp), str(tp)], "\n".join(log_lines)
 
 
-# ===========================================================================
+
 # Gradio layout
-# ===========================================================================
+
 def build_ui():
-    import gradio as gr                              # lazy import: CLI users don't need gradio
+    import gradio as gr                              
 
     rule_names = list_rule_files()
     first = rule_names[0] if rule_names else None
