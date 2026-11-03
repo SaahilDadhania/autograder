@@ -12,17 +12,17 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def sha256_text(text: str) -> str:
-    """Hex SHA-256 of a string (used for the rules hash and the LLM cache keys)."""
+   
     return hashlib.sha256(text.encode("utf-8", errors="replace")).hexdigest()
 
 
 def sha256_file(path: Path) -> str:
-    """Hex SHA-256 of a file's bytes."""
+    
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def canonical_json(obj: Any) -> str:
-    """Stable JSON text (sorted keys, fixed separators) -> same input = same hash."""
+    
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
