@@ -43,11 +43,10 @@ def run_grading(source_file, rules_text: str, model: str, use_llm: bool):
     if not source_file:
         return "Please upload a .c file first.", [], "", {}, None, ""
     try:
-        json.loads(rules_text)                       # fail early with a friendly message
+        json.loads(rules_text)                      
     except json.JSONDecodeError as e:
         return f"The rules JSON is invalid: {e}", [], "", {}, None, ""
 
-    # write the edited rules to a temp file (relative paths inside still resolve against the project root)
     with tempfile.NamedTemporaryFile("w", suffix=".json", prefix="rules_", delete=False, encoding="utf-8") as tf:
         tf.write(rules_text)
         rules_path = tf.name
@@ -84,7 +83,7 @@ def build_ui():
     with gr.Blocks(title="AutoGrader - C program evaluator") as demo:
         gr.Markdown("# AutoGrader\nRule-driven, reproducible grading of C programs with local-LLM agents (Ollama).")
         with gr.Row():
-            # ---------------- left column: inputs ----------------
+            
             with gr.Column(scale=1):
                 src = gr.File(label="Student submission (.c)", file_types=[".c"], type="filepath")
                 rule_dd = gr.Dropdown(choices=rule_names, value=first, label="Rule set (config/rules_*.json)")
@@ -97,7 +96,7 @@ def build_ui():
                     check_btn = gr.Button("Check Ollama")
                     run_btn = gr.Button("Grade", variant="primary")
                 status = gr.Textbox(label="Status / progress log", lines=6, interactive=False)
-            # ---------------- right column: results ----------------
+            
             with gr.Column(scale=2):
                 headline = gr.Markdown()
                 table = gr.Dataframe(headers=["Metric", "Weight", "Points", "Feedback"], interactive=False,
@@ -107,7 +106,7 @@ def build_ui():
                     json_out = gr.JSON()
                 files = gr.File(label="Download reports (.json / .txt)", file_count="multiple")
 
-        # ---------------- events ----------------
+        
         rule_dd.change(load_rules_text, inputs=rule_dd, outputs=rules_box)
         check_btn.click(check_ollama, inputs=model, outputs=status)
         run_btn.click(run_grading, inputs=[src, rules_box, model, use_llm],
@@ -116,7 +115,7 @@ def build_ui():
 
 
 def launch():
-    """Start the web server (host/port can be set with AUTOGRADER_HOST / AUTOGRADER_PORT)."""
+   
     build_ui().queue().launch(server_name=os.environ.get("AUTOGRADER_HOST", "127.0.0.1"),
                               server_port=int(os.environ.get("AUTOGRADER_PORT", "7860")))
 
