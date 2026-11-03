@@ -1,19 +1,5 @@
 #!/usr/bin/env python3
-"""
-app.py  -  Gradio web interface of the AutoGrader
-===================================================
-Run with:   python app.py         (or:  python main.py --ui)
-Open:       http://127.0.0.1:7860
 
-The UI is only a thin shell:
-    1. the user uploads a .c file
-    2. picks a rule set (the JSON is shown in an editor, so the instructor can change
-       weights / thresholds right here without touching any Python code)
-    3. presses "Grade" -> we call agent.coordinator.grade_submission() and display the result
-
-All grading logic stays in agent/.  `run_grading` below has NO gradio dependency, so it can
-be unit-tested without a browser; gradio is imported lazily inside build_ui().
-"""
 from __future__ import annotations
 
 import json
@@ -30,21 +16,20 @@ from agent.rules import DEFAULT_LLM, RulesError
 CONFIG_DIR = PROJECT_ROOT / "config"
 
 
-# ===========================================================================
 # Backend functions (no gradio here)
-# ===========================================================================
+
 def list_rule_files() -> list:
     """Names of all rule sets available in config/ (files called rules_*.json)."""
     return sorted(p.name for p in CONFIG_DIR.glob("rules_*.json"))
 
 
 def load_rules_text(rule_name: str) -> str:
-    """Return the raw JSON text of a rule set (shown in the editor box)."""
+   
     return (CONFIG_DIR / rule_name).read_text(encoding="utf-8") if rule_name else ""
 
 
 def check_ollama(model: str) -> str:
-    """Tell the user whether Ollama is reachable and the model is pulled."""
+    
     cfg = {**DEFAULT_LLM, **({"model": model.strip()} if model and model.strip() else {})}
     client = OllamaClient(cfg)
     if client.is_available():
@@ -54,10 +39,7 @@ def check_ollama(model: str) -> str:
 
 
 def run_grading(source_file, rules_text: str, model: str, use_llm: bool):
-    """
-    Grade the uploaded file with the (possibly edited) rules.
-    Returns: (headline, table_rows, text_report, json_report, download_files, progress_log)
-    """
+  
     if not source_file:
         return "Please upload a .c file first.", [], "", {}, None, ""
     try:
