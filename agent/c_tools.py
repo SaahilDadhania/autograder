@@ -178,7 +178,7 @@ def parse_functions(path: Path, src: str) -> List[FuncInfo]:
 
 
 def static_sanity(src: str) -> dict:
-    """Cheap structural checks that do not need to run the program."""
+   
     m = mask_comments_strings(src)
     has_main = re.search(r"\bmain\s*\(", m) is not None
     reads = re.search(r"\b(scanf|fscanf|sscanf|getchar|fgetc|getc|fgets|gets|getline|fread|read)\s*\(", m) is not None
