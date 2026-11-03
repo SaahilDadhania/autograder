@@ -1,14 +1,4 @@
-"""
-agent/common.py
-================
-Small helpers + data classes shared by EVERY module of the AutoGrader.
 
-Nothing in here talks to the compiler, the LLM or the file system rules --
-it only defines the "vocabulary" the other modules use to talk to each other:
-
-    AnalyzerResult   -> what every analyzer returns to the coordinator
-    AnalysisContext  -> what the coordinator hands to every analyzer
-"""
 from __future__ import annotations
 
 import hashlib
@@ -17,9 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
-# Root folder of the project (the folder that contains main.py).
-# All relative paths written inside rules files are resolved against this,
-# so the agent behaves the same no matter which directory you launch it from.
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -40,17 +28,7 @@ def canonical_json(obj: Any) -> str:
 
 @dataclass
 class AnalyzerResult:
-    """
-    The single thing an analyzer must return.
-
-    score     : float in [0, 1]  (1 = full marks for this metric)
-    feedback  : one short human-readable sentence for the student
-    evidence  : raw machine-readable details (goes into the JSON report)
-    failures  : list of dicts {input, expected, got, status, note, source}
-                describing concrete failing inputs (shown in "Where you failed")
-    flags     : list of dicts for things a human should look at (e.g. plagiarism)
-    skipped   : True when the analyzer was not run (e.g. program never halts)
-    """
+    
     score: float = 0.0
     feedback: str = ""
     evidence: dict = field(default_factory=dict)
@@ -61,20 +39,7 @@ class AnalyzerResult:
 
 @dataclass
 class AnalysisContext:
-    """
-    Everything an analyzer may need, prepared ONCE by the coordinator.
-
-    source_path       : path of the student's .c file (original file name kept)
-    source_text       : full text of that file
-    workdir           : private temp folder analyzers may write into
-    rules             : the loaded Rules object (see agent/rules.py)
-    llm               : OllamaClient shared by all LLM-using analyzers
-    binary            : normal (-O2) compiled executable, or None if compile failed
-    reference_binary  : instructor's reference solution compiled, or None
-    shared_inputs     : [(label, stdin_text), ...] every known test input; the
-                        sanitizer analyzer re-uses them to hunt for memory bugs
-    execution_allowed : False if compile failed / program never halts
-    """
+    
     source_path: Path
     source_text: str
     workdir: Path
