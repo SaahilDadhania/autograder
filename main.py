@@ -1,27 +1,5 @@
 #!/usr/bin/env python3
-"""
-main.py  -  entry point of the AutoGrader (command line + launcher for the web UI)
-====================================================================================
 
-Examples
---------
-  # grade one file (writes reports/add.json and reports/add.txt, prints the text report)
-  python main.py --submission submissions/add.c --rules config/rules_add.json
-
-  # grade every .c file in a folder (the "sample submissions" deliverable)
-  python main.py --batch submissions/ --rules config/rules_add.json
-
-  # run without Ollama (heuristic fallbacks for the LLM parts)
-  python main.py --submission submissions/add.c --rules config/rules_add.json --no-llm
-
-  # use another local model for this run
-  python main.py --submission submissions/add.c --rules config/rules_add.json --model qwen2.5-coder:7b
-
-  # start the Gradio web interface
-  python main.py --ui
-
-This file only parses arguments and calls the coordinator; all the logic lives in agent/.
-"""
 import argparse
 import sys
 from pathlib import Path
@@ -47,9 +25,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
 
-    # ---- web UI mode ------------------------------------------------------------
+    
     if args.ui:
-        from app import launch          # imported lazily so the CLI works without gradio installed
+        from app import launch          
         launch()
         return 0
 
@@ -57,7 +35,7 @@ def main(argv=None) -> int:
         print("Give --submission FILE.c, --batch FOLDER or --ui.  See --help.")
         return 2
 
-    # ---- per-run LLM overrides ----------------------------------------------------
+   
     overrides = {}
     if args.no_llm:
         overrides["enabled"] = False
@@ -84,7 +62,7 @@ def main(argv=None) -> int:
                              "; ".join(fl["type"] for fl in rep["flags"])))
         print(f"    reports written: {jp}  {tp}", file=sys.stderr)
 
-    if len(files) > 1:                  # batch overview table
+    if len(files) > 1:                  
         print("\n===== Batch summary =====")
         print(f"{'file':<20}{'grade':>8}  {'status':<8} flags")
         for name, g, st, fl in summary_rows:
